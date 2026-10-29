@@ -1,0 +1,275 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   PayPilot AI design tokens — deep navy surfaces, restrained violet accents.
+   ------------------------------------------------------------------------- */
+@theme {
+  --font-sans:
+    'Inter', 'SF Pro Display', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:
+    ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  --color-ink: #e8ecf9;
+  --color-muted: #98a2c0;
+  --color-faint: #6b769a;
+
+  --color-navy-950: #05070f;
+  --color-navy-900: #080c18;
+  --color-navy-850: #0b1020;
+  --color-navy-800: #0e1526;
+  --color-navy-750: #121a30;
+  --color-navy-700: #18213c;
+  --color-navy-600: #232e51;
+  --color-navy-500: #33406b;
+
+  --color-accent: #7c5cff;
+  --color-accent-soft: #a68dff;
+  --color-info: #3b82f6;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-navy-950);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+@layer base {
+  * {
+    border-color: rgb(255 255 255 / 0.07);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: rgb(124 92 255 / 0.35);
+  }
+}
+
+/* --------------------------------------------------------------- components */
+.card {
+  background-color: var(--color-navy-850);
+  border: 1px solid rgb(255 255 255 / 0.07);
+  border-radius: 0.875rem;
+}
+
+.card-raised {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.03), rgb(255 255 255 / 0));
+  background-color: var(--color-navy-850);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset;
+}
+
+.input {
+  width: 100%;
+  background-color: var(--color-navy-900);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--color-faint);
+}
+
+.input:hover:not(:disabled) {
+  border-color: rgb(255 255 255 / 0.18);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgb(124 92 255 / 0.2);
+}
+
+.input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.input-error {
+  border-color: rgb(239 68 68 / 0.7);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+  border: 1px solid transparent;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+.btn-primary:not(:disabled):hover {
+  background-color: #6a49f5;
+}
+
+.btn-ghost {
+  background-color: rgb(255 255 255 / 0.04);
+  border-color: rgb(255 255 255 / 0.1);
+  color: var(--color-ink);
+}
+
+.btn-ghost:not(:disabled):hover {
+  background-color: rgb(255 255 255 / 0.08);
+}
+
+.btn-danger {
+  background-color: rgb(239 68 68 / 0.12);
+  border-color: rgb(239 68 68 / 0.35);
+  color: #fca5a5;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.05) 25%,
+    rgb(255 255 255 / 0.1) 37%,
+    rgb(255 255 255 / 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 0.375rem;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.grid-glow {
+  background-image:
+    radial-gradient(circle at 15% -10%, rgb(124 92 255 / 0.18), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgb(59 130 246 / 0.12), transparent 40%);
+}
+
+/* Thin, quiet scrollbars to match the dark surfaces. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.12);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 0.22);
+  background-clip: content-box;
+}
+
+/* ------------------------------------------------------------------- print */
+@media print {
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .card,
+  .card-raised {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    color: #111 !important;
+  }
+
+  .print-plain,
+  .print-plain * {
+    color: #111 !important;
+    background: transparent !important;
+    border-color: #ddd !important;
+  }
+
+  @page {
+    margin: 16mm;
+  }
+}
+
+.print-only {
+  display: none;
+}

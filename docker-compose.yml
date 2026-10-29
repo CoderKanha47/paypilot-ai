@@ -1,0 +1,59 @@
+# PayPilot AI — Docker Compose
+# Usage: docker compose up --build
+
+services:
+  paypilot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - SEED_DEMO_DATA=false
+      # PayPal Sandbox (required for live checkout)
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET}
+      - PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com
+      - PAYPAL_CURRENCY=USD
+      - PAYPAL_BRAND_NAME=PayPilot AI
+      - PAYPAL_RETURN_URL=http://localhost:8000/payment/result?outcome=success
+      - PAYPAL_CANCEL_URL=http://localhost:8000/payment/result?outcome=cancelled
+      - PAYPAL_MODE=sandbox
+      - ALLOW_LIVE_PAYMENTS=false
+      # AI Provider (optional)
+      - AI_PROVIDER=${AI_PROVIDER:-demo}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=gpt-4o-mini
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ANTHROPIC_MODEL=claude-3-5-haiku-latest
+      # Database (SQLite file)
+      - DATABASE_URL=sqlite:///./paypilot.db
+    volumes:
+      - paypilot-data:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/api/health', timeout=3).raise_for_status()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  paypilot-data:
+    driver: local
+
+# Optional: Development override
+# Create docker-compose.override.yml for local dev:
+#
+# services:
+#   paypilot:
+#     build:
+#       target: frontend-builder  # Not needed, but shows intent
+#     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+#     volumes:
+#       - ./backend/app:/app/app
+#       - ./frontend:/app/frontend
+#     environment:
+#       - APP_ENV=development
+#       - SEED_DEMO_DATA=true

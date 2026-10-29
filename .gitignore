@@ -1,0 +1,44 @@
+# --- secrets / local config ------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# --- python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- database / runtime artifacts -----------------------------------------
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+paypilot.db*
+
+# --- node / frontend -------------------------------------------------------
+node_modules/
+dist/
+build/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+
+# --- editors / os ----------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- misc ------------------------------------------------------------------
+*.log
+.cache/
