@@ -50,7 +50,7 @@ PayPilot AI is an AI-powered payment operations dashboard that:
 
 3. **Honest demo mode** — Ensured every simulated record carries `mode="demo"`, `is_demo_record=true`, API responses include `notice` fields, and UI shows explicit badges. The AI fallback is a deterministic rule engine, also labelled.
 
-4. **Docker volume hiding code** — Fixed by mounting the named volume only at `/app/data` for SQLite persistence, not over the entire `/app`.
+4. **Docker volume hiding code (unverified)** — Fixed by mounting the named volume only at `/app/data` for SQLite persistence, not over the entire `/app`. Docker runtime was not verified in the audit environment.
 
 ### What I Learned
 
@@ -81,7 +81,7 @@ PayPilot AI is an AI-powered payment operations dashboard that:
 
 ---
 
-## Tools Used (verbatim from TOOLS.md)
+## Tools Used
 
 ### PayPal Developer Platform
 
@@ -128,9 +128,9 @@ PayPilot AI is an AI-powered payment operations dashboard that:
      "confidence": "high|medium|low"
    }
    ```
-   - References filtered to only known transaction IDs from context
-   - Full response scanned for leaked secrets (PayPal secret, AI keys)
-   - On validation failure: one correctative retry with stricter prompt
+- References filtered to only known transaction IDs from context
+    - Full response scanned for leaked secrets (PayPal secret, AI keys)
+    - On validation failure: one corrective retry with stricter prompt
 
 4. **Clear labelling** — Every response carries:
    - `provider`: `"groq"` (or `"openai"`, `"anthropic"`, `"demo"`)
@@ -151,4 +151,10 @@ PayPilot AI is an AI-powered payment operations dashboard that:
 
 ---
 
-**No other tools or services were used.** The application uses only the PayPal Developer Platform (Sandbox) and the Groq OpenAI-compatible endpoint for the verified live test. All totals are computed in backend code with integer arithmetic; the model only explains and recommends from minimized data.
+**How This Was Built**
+
+This project was built with AI coding assistance (OpenCode). I directed the design, reviewed all code changes, and ran the live PayPal Sandbox and Groq integration tests on 2026-11-04. The full create → approve → capture flow and the AI assistant were verified live on 2026-11-04 against the real PayPal Sandbox and Groq's `openai/gpt-oss-120b` model.
+
+**Runtime tools:** PayPal Sandbox (OAuth 2.0, Orders v2 API, JS SDK) and Groq (`openai/gpt-oss-120b` via OpenAI-compatible endpoint).  
+**Development tools:** OpenCode with AI coding models.  
+All totals are computed in backend code with integer arithmetic; the model only explains and recommends from minimized data.

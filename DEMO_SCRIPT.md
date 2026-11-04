@@ -8,7 +8,7 @@
 ---
 
 ### 0:00–0:15 — Introduction (15s)
-**Visual**: Terminal showing `docker compose up` or `uvicorn` + `npm run dev` starting  
+**Visual**: Terminal showing `uvicorn` + `npm run dev` starting  
 **Voiceover**:  
 "PayPilot AI — an AI-powered payment operations dashboard built for the PayPal AI Hackathon. It integrates the PayPal Sandbox for real payment workflows and a grounded AI assistant for payment insights. Let me walk you through the complete flow."
 
@@ -20,7 +20,7 @@
 - Show KPI cards: Total Captured, Awaiting Payment, Failed/Declined, Success Rate
 - Hover monthly collections chart (Recharts area chart)
 - Show status distribution donut chart
-- Point out "SANDBOX CHECKOUT" badge (or "DEMO CHECKOUT" if no creds)
+- Point out "SANDBOX CHECKOUT" badge
 - Show recent transactions table
 
 **Voiceover**:  
@@ -34,7 +34,7 @@
 1. Fill form: Amount `49.99`, Currency `USD`, Description `Logo design — Acme Corp`, Reference `INV-2026-042`
 2. Click "Create PayPal order" — show loading, then PayPal buttons appear
 3. Click "PayPal" button → Sandbox checkout opens in modal
-4. Log in with Sandbox buyer account (or use test card: `4111 1111 1111 1111`)
+4. Log in with Sandbox buyer account
 5. Approve payment
 6. Back in app: "Verifying and recording..." → Success panel appears
 7. Click "View transaction"
@@ -62,10 +62,10 @@
 **Actions**:
 1. Click suggested question: "How much did I collect this week?"
 2. Show response: facts (computed totals), recommendations, confidence
-2. Ask: "Which payments are still pending?"
-3. Show response with transaction references
-4. Ask: "Summarize my recent transactions"
-5. Point out "Demo mode" notice (if no AI key) or provider badge
+3. Ask: "Which payments are still pending?"
+4. Show response with transaction references
+5. Ask: "Summarize my recent transactions"
+6. Point out provider badge (Groq)
 
 **Voiceover**:  
 "The assistant reads real aggregates from your database — all arithmetic is done in the backend using integer math, never by the model. The context sent to the AI is minimized and PII-scrubbed. Responses separate recorded facts from suggestions, and every response carries a disclaimer. Swap in OpenAI or Anthropic by adding an API key."
@@ -84,16 +84,16 @@
 ---
 
 ### 2:40–2:45 — Closing (5s)
-**Visual**: Terminal showing `pytest tests/ -v` passing (233 tests)  
+**Visual**: Terminal showing `pytest tests/ -v` passing (237 tests)  
 **Voiceover**:  
-"233 passing tests, zero external dependencies in the test suite. PayPilot AI — smarter payments, clearer decisions, less busywork. Thank you."
+"237 passing tests, zero external dependencies in the test suite. PayPilot AI — smarter payments, clearer decisions, less busywork. Thank you."
 
 ---
 
 ## Recording Tips
 
-1. **Prepare data**: Seed demo data (`SEED_DEMO_DATA=true`) for charts/history
-2. **Sandbox account**: Have buyer credentials ready (or use test card numbers shown in New Payment sidebar)
+1. **Prepare data**: Record on a clean database after making 2-3 real Sandbox payments
+2. **Sandbox account**: Have buyer credentials ready (Testing Tools → Sandbox Accounts → Personal account)
 3. **Browser**: Hide bookmarks bar, use clean profile
 4. **Audio**: Record voiceover separately for clarity, then sync
 5. **Zoom**: Zoom in on key UI elements (form fields, badges, numbers)
@@ -110,4 +110,17 @@
 - "AI is **grounded** — no hallucinated numbers. Backend computes every total in integer cents."
 - "Security: **Secrets never leave the backend**. Browser only sees public client-id."
 - "Demo mode is **honest** — clearly labelled, never presented as real Sandbox activity."
-- "Built for the hackathon — **233 tests**, clean architecture, ready to extend."
+- "Built for the hackathon — **237 tests**, clean architecture, ready to extend."
+
+## Pre-Recording Checklist
+
+- [ ] PayPal Sandbox app created with Client ID/Secret in `.env`
+- [ ] Sandbox buyer (Personal) account created and credentials noted
+- [ ] Groq API key in `.env` with `AI_PROVIDER=openai`, `AI_BASE_URL=https://api.groq.com/openai/v1`, `AI_MODEL=openai/gpt-oss-120b`
+- [ ] Backend running: `uvicorn app.main:app --reload --port 8000`
+- [ ] Frontend running: `npm run dev` on port 5173
+- [ ] Clean database (delete `paypilot.db`), then create 2-3 real Sandbox payments
+- [ ] Browser: clean profile, no extensions, bookmarks hidden
+- [ ] Screen recorder: 1920x1080, system audio + mic
+- [ ] No `.env` visible on screen (blur terminal when editing)
+- [ ] Run `pytest tests/ -v` in background terminal for closing shot

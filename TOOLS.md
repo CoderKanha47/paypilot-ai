@@ -68,4 +68,6 @@
 
 ---
 
-**No other tools or services were used.** The application uses only the PayPal Developer Platform (Sandbox) and the Groq OpenAI-compatible endpoint for the verified live test. All totals are computed in backend code with integer arithmetic; the model only explains and recommends from minimized data.
+**Runtime tools:** PayPal Sandbox (OAuth 2.0, Orders v2 API, JS SDK) and Groq (`openai/gpt-oss-120b` via OpenAI-compatible endpoint).  
+**Development tools:** OpenCode with AI coding models.  
+All totals are computed in backend code with integer arithmetic; the model only explains and recommends from minimized data.

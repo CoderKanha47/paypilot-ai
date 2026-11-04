@@ -17,7 +17,11 @@ An AI-powered payment operations dashboard built on the PayPal Sandbox for freel
 
 ## Screenshots
 
-*Placeholder — add screenshots of Overview dashboard, New Payment flow, AI Assistant, Transaction History, Reports, Settings*
+See `docs/screenshots/`:
+- `overview.png` — Dashboard with KPI cards, monthly collections chart, status distribution, recent transactions
+- `new-payment.png` — Payment creation form and PayPal Sandbox approval flow
+- `assistant.png` — AI Assistant with grounded response showing facts, recommendations, and transaction references
+- `transactions.png` — Transaction history with search, filters, and detail view
 
 ## Tech Stack
 
@@ -40,17 +44,13 @@ An AI-powered payment operations dashboard built on the PayPal Sandbox for freel
 
 ### Exact .env Location
 
-The backend reads `.env` from **two locations** (in priority order):
-1. `backend/.env` — project-specific
-2. `.env` at **repository root** — shared
-
-Create your `.env` at the **repository root** (same folder as this README). The app will find it.
+Create your `.env` at the **repository root** (same folder as this README). The app reads from both `backend/.env` and the root `.env`; use the root for simplicity.
 
 ### Windows (PowerShell)
 
 ```powershell
 # 1. Clone
-git clone https://github.com/<your-username>/paypilot-ai.git
+git clone https://github.com/CoderKanha47/paypilot-ai.git
 cd paypilot-ai
 
 # 2. Backend
@@ -72,7 +72,7 @@ npm run dev
 
 ```bash
 # 1. Clone
-git clone https://github.com/<your-username>/paypilot-ai.git
+git clone https://github.com/CoderKanha47/paypilot-ai.git
 cd paypilot-ai
 
 # 2. Backend
@@ -108,13 +108,14 @@ PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com
 PAYPAL_CURRENCY=USD
 
 # AI Provider (optional — defaults to demo mode)
-AI_PROVIDER=openai_compatible      # openai | anthropic | openai_compatible | demo
+# Tested live with Groq: AI_PROVIDER=openai, AI_BASE_URL=https://api.groq.com/openai/v1, AI_MODEL=openai/gpt-oss-120b
+AI_PROVIDER=openai
 AI_BASE_URL=https://api.groq.com/openai/v1
 AI_API_KEY=gsk_...                 # Groq API key
 AI_MODEL=openai/gpt-oss-120b
 
 # Demo data
-SEED_DEMO_DATA=true
+SEED_DEMO_DATA=false
 ```
 
 **Never commit `.env` — it's git-ignored.**
@@ -125,7 +126,7 @@ SEED_DEMO_DATA=true
 |---------|---------------|---------------|
 | **PayPal Sandbox** | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` | 1. Go to https://developer.paypal.com → Dashboard → Apps & Credentials → Sandbox<br>2. Create App → copy Client ID & Secret |
 | **Sandbox Buyer Account** | Test buyer email/password | 1. In Developer Dashboard → Testing Tools → Sandbox Accounts<br>2. Create a "Personal" (buyer) account<br>3. Use its email/password at checkout, or use test card `4111 1111 1111 1111` |
-| **Groq (AI)** | `AI_API_KEY` (Groq key), `AI_BASE_URL=https://api.groq.com/openai/v1`, `AI_MODEL=openai/gpt-oss-120b` | 1. Sign up at https://console.groq.com → API Keys → Create Key<br>2. Free tier includes generous daily limits |
+| **Groq (AI)** | `AI_API_KEY` (Groq key), `AI_BASE_URL=https://api.groq.com/openai/v1`, `AI_MODEL=openai/gpt-oss-120b` | 1. Sign up at https://console.groq.com → API Keys → Create Key |
 | **OpenAI / Anthropic (alternative)** | `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` | Standard API keys from respective platforms |
 
 ### Docker (Unverified — Daemon Not Available in Audit)
@@ -187,6 +188,10 @@ pytest tests/ -v
 - **Not production-ready** — SQLite, in-process rate limiting, no CSP/HSTS, no audit logging
 - **Not financial advice** — AI recommendations are suggestions only; always verify with PayPal
 - **Docker not verified** — Build fixed but runtime untested in audit environment
+
+## How This Was Built
+
+This project was built with AI coding assistance (OpenCode). I directed the design, reviewed all code changes, and ran the live PayPal Sandbox and Groq integration tests on 2026-11-04. The full create → approve → capture flow and the AI assistant were verified live on 2026-11-04 against the real PayPal Sandbox and Groq's `openai/gpt-oss-120b` model.
 
 ## License
 

@@ -42,3 +42,8 @@ Thumbs.db
 # --- misc ------------------------------------------------------------------
 *.log
 .cache/
+
+# --- submission docs (kept locally, not tracked) ----------------------------
+AUDIT_REPORT.md
+SUBMISSION_CHECKLIST.md
+RESUME_DESCRIPTION.md
