@@ -179,6 +179,11 @@ export interface ChatResponse {
 export interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
+  facts?: string[]
+  recommendations?: string[]
+  references?: string[]
+  confidence?: string
+  disclaimer?: string | null
 }
 
 export interface AssistantSuggestionsResponse {

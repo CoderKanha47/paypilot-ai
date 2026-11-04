@@ -191,7 +191,7 @@ export function Transactions() {
       ) : (
         <div className="card overflow-hidden">
           <TransactionTable rows={items} />
-          <div className="flex flex-col gap-3 border-t border-white/8 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-t border-navy-700/15 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-faint">
               Showing <span className="tabular-nums text-muted">{offset + 1}</span>–
               <span className="tabular-nums text-muted">{Math.min(offset + PAGE_SIZE, total)}</span> of{' '}

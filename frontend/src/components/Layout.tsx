@@ -6,13 +6,16 @@ import {
   FileBarChart,
   LayoutDashboard,
   Menu,
+  Moon,
   ReceiptText,
   Settings,
   ShieldCheck,
+  Sun,
   X,
 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { ModeBanner } from './ModeBanner'
+import { useTheme } from '../context/ThemeContext'
 
 const NAV = [
   { to: '/', label: 'Overview', icon: LayoutDashboard, end: true },
@@ -51,7 +54,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
             `group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
               isActive
                 ? 'bg-accent/14 text-ink shadow-[inset_2px_0_0_0_var(--color-accent)]'
-                : 'text-muted hover:bg-white/5 hover:text-ink'
+                : 'text-muted hover:bg-navy-800/10 hover:text-ink'
             }`
           }
         >
@@ -61,7 +64,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
       ))}
 
       <div className="mt-auto space-y-3 px-3 pb-3 pt-6">
-        <div className="rounded-lg border border-white/8 bg-navy-850 p-3">
+        <div className="rounded-lg border border-navy-700/15 bg-navy-850 p-3">
           <div className="flex items-center gap-2 text-xs">
             <ShieldCheck size={14} className="text-success" aria-hidden="true" />
             <span className="font-semibold text-ink">
@@ -121,12 +124,13 @@ function ModeChip() {
 export function Layout() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <div className="min-h-screen bg-navy-950">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-white/8 bg-navy-900 lg:flex">
-        <div className="flex h-16 items-center border-b border-white/8 px-5">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-navy-700/15 bg-navy-900 lg:flex">
+        <div className="flex h-16 items-center border-b border-navy-700/15 px-5">
           <Logo />
         </div>
         <div className="flex flex-1 flex-col overflow-y-auto pt-5">
@@ -139,16 +143,16 @@ export function Layout() {
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
-            className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+            className="absolute inset-0 bg-navy-950/65 backdrop-blur-sm"
             onClick={() => setOpen(false)}
             aria-label="Close navigation"
           />
-          <div className="absolute inset-y-0 left-0 flex w-64 flex-col border-r border-white/10 bg-navy-900">
-            <div className="flex h-16 items-center justify-between border-b border-white/8 px-5">
+          <div className="absolute inset-y-0 left-0 flex w-64 flex-col border-r border-navy-700/15 bg-navy-900">
+            <div className="flex h-16 items-center justify-between border-b border-navy-700/15 px-5">
               <Logo />
               <button
                 type="button"
-                className="rounded-md p-1.5 text-muted hover:bg-white/8 hover:text-ink"
+                className="rounded-md p-1.5 text-muted hover:bg-navy-800/10 hover:text-ink"
                 onClick={() => setOpen(false)}
                 aria-label="Close navigation"
               >
@@ -163,12 +167,12 @@ export function Layout() {
       ) : null}
 
       <div className="lg:pl-60">
-        <header className="sticky top-0 z-30 border-b border-white/8 bg-navy-950/88 backdrop-blur-md">
+        <header className="sticky top-0 z-30 border-b border-navy-700/15 bg-navy-950/88 backdrop-blur-md">
           <ModeBanner />
           <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-3 px-4 sm:px-6">
             <button
               type="button"
-              className="rounded-md p-2 text-muted hover:bg-white/8 hover:text-ink lg:hidden"
+              className="rounded-md p-2 text-muted hover:bg-navy-800/10 hover:text-ink lg:hidden"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
             >
@@ -181,6 +185,15 @@ export function Layout() {
             </p>
             <div className="ml-auto flex items-center gap-3">
               <ModeChip />
+              <button
+                type="button"
+                className="rounded-md p-2 text-muted hover:bg-navy-800/10 hover:text-ink transition-colors"
+                onClick={toggleTheme}
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              >
+                {theme === 'dark' ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+              </button>
               <NavLink to="/new-payment" className="btn btn-primary !px-3 !py-2 text-xs sm:!px-4 sm:text-sm">
                 <CirclePlus size={15} aria-hidden="true" />
                 <span className="hidden sm:inline">New payment</span>

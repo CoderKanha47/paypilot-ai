@@ -23,7 +23,7 @@ export function TransactionTable({ rows, compact = false, emptyMessage }: Transa
     <div className="overflow-x-auto">
       <table className="w-full min-w-[720px] text-left text-sm">
         <thead>
-          <tr className="border-b border-white/8 text-[11px] uppercase tracking-[0.08em] text-faint">
+          <tr className="border-b border-navy-700/15 text-[11px] uppercase tracking-[0.08em] text-faint">
             <th scope="col" className="px-5 py-3 font-semibold">Description</th>
             <th scope="col" className="px-3 py-3 font-semibold">Status</th>
             {!compact ? (
@@ -38,7 +38,7 @@ export function TransactionTable({ rows, compact = false, emptyMessage }: Transa
           {rows.map((row) => (
             <tr
               key={row.id}
-              className="border-b border-white/5 transition last:border-0 hover:bg-white/[0.03]"
+              className="border-b border-navy-700/15 transition last:border-0 hover:bg-navy-800/10"
             >
               <td className="px-5 py-3.5">
                 <Link
@@ -51,7 +51,7 @@ export function TransactionTable({ rows, compact = false, emptyMessage }: Transa
                 <div className="mt-1 flex flex-wrap items-center gap-2 pl-6 text-[11px] text-faint">
                   <span className="font-mono">{row.paypal_order_id}</span>
                   {row.is_demo_record ? (
-                    <span className="tag border border-white/15 bg-white/6 text-[9px] text-muted">
+                    <span className="tag border border-navy-700/20 bg-navy-800/10 text-[9px] text-muted">
                       DEMO RECORD
                     </span>
                   ) : null}
@@ -80,7 +80,7 @@ export function TransactionTable({ rows, compact = false, emptyMessage }: Transa
               <td className="px-5 py-3.5 text-right">
                 <Link
                   to={`/transactions/${row.id}`}
-                  className="inline-flex rounded-md p-1.5 text-faint transition hover:bg-white/8 hover:text-ink"
+                  className="inline-flex rounded-md p-1.5 text-faint transition hover:bg-navy-800/10 hover:text-ink"
                   aria-label={`Open ${row.description}`}
                 >
                   <ArrowUpRight size={15} aria-hidden="true" />

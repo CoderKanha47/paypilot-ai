@@ -16,6 +16,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from typing import Any, Literal, Protocol
+import uuid
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -53,9 +54,10 @@ class CheckoutBackend(Protocol):
         return_url: str | None = None,
         cancel_url: str | None = None,
         intent: str = "CAPTURE",
+        idempotency_key: str | None = None,
     ) -> dict[str, Any]: ...
 
-    async def capture_order(self, order_id: str, **kwargs: Any) -> dict[str, Any]: ...
+    async def capture_order(self, order_id: str, *, idempotency_key: str | None = None, **kwargs: Any) -> dict[str, Any]: ...
 
     async def get_order(self, order_id: str) -> dict[str, Any]: ...
 
@@ -84,18 +86,24 @@ async def create_payment(
     amount_minor = payload.amount_minor()
     currency = payload.currency
 
+    # Generate a stable idempotency key for this payment request.
+    # Uses a UUID that will be stored with the transaction and reused on retry.
+    idempotency_key = f"idem-{uuid.uuid4().hex}"
+
     order = await checkout.create_order(
         amount_minor=amount_minor,
         currency=currency,
         description=payload.description,
         reference=payload.customer_reference,
         note=payload.customer_note,
+        idempotency_key=idempotency_key,
     )
 
     _assert_amount_matches(order, amount_minor=amount_minor, currency=currency, context="create")
 
     row = Transaction(
         paypal_order_id=order["id"],
+        paypal_request_id=idempotency_key,
         paypal_intent=str(order.get("intent") or "CAPTURE"),
         status=normalize_status(order.get("status")),
         paypal_status=order.get("status"),
@@ -160,10 +168,13 @@ async def capture_payment(
             mode=checkout.mode,
         )
 
+    # Use the stored idempotency key for the capture request (if available).
+    capture_idempotency_key = row.paypal_request_id
+
     if checkout.mode == "demo":
-        order = await checkout.capture_order(order_id, outcome=demo_outcome or "approve")
+        order = await checkout.capture_order(order_id, idempotency_key=capture_idempotency_key, outcome=demo_outcome or "approve")
     else:
-        order = await _capture_on_paypal(checkout, order_id)  # type: ignore[arg-type]
+        order = await _capture_on_paypal(checkout, order_id, idempotency_key=capture_idempotency_key)  # type: ignore[arg-type]
 
     # Verify PayPal's answer describes *this* order before persisting anything.
     if str(order.get("id")) != row.paypal_order_id:
@@ -288,9 +299,9 @@ def _find_owned_row(
     return row
 
 
-async def _capture_on_paypal(paypal: PayPalService, order_id: str) -> dict[str, Any]:
+async def _capture_on_paypal(paypal: PayPalService, order_id: str, idempotency_key: str | None = None) -> dict[str, Any]:
     try:
-        return await paypal.capture_order(order_id)
+        return await paypal.capture_order(order_id, idempotency_key=idempotency_key)
     except PayPalError as exc:
         if exc.name in {"ORDER_NOT_APPROVED", "ORDER_VALIDATION_FAILED"} or (
             exc.http_status == 422 and "not approved" in exc.message.lower()

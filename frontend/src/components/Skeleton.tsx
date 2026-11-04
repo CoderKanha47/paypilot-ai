@@ -46,11 +46,11 @@ export function ChartSkeleton({ height = 240 }: { height?: number }) {
 export function TableSkeleton({ rows = 6, cols = 5 }: { rows?: number; cols?: number }) {
   return (
     <div className="card overflow-hidden">
-      <div className="border-b border-white/7 px-5 py-3">
+      <div className="border-b border-navy-700/20 px-5 py-3">
         <Skeleton className="h-4 w-32" />
       </div>
       {Array.from({ length: rows }).map((_, rowIndex) => (
-        <div key={rowIndex} className="flex items-center gap-4 border-b border-white/5 px-5 py-4">
+        <div key={rowIndex} className="flex items-center gap-4 border-b border-navy-700/15 px-5 py-4">
           {Array.from({ length: cols }).map((__, colIndex) => (
             <Skeleton
               key={colIndex}

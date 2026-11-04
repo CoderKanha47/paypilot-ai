@@ -12,7 +12,7 @@ export function ModeBanner() {
 
   if (error) {
     return (
-      <div className="border-b border-danger/30 bg-danger/10 px-4 py-2.5 text-xs font-medium text-danger sm:px-6">
+      <div className="border-b border-navy-700/30 bg-navy-800/10 px-4 py-2.5 text-xs font-medium text-danger sm:px-6">
         <div className="mx-auto flex max-w-[1400px] items-center gap-2">
           <TriangleAlert size={14} aria-hidden="true" />
           Backend unreachable — {error}
@@ -54,10 +54,10 @@ export function ModeBanner() {
   if (config?.demo_data_seeded) {
     messages.push({
       key: 'demo-data',
-      tone: 'border-white/12 bg-white/6 text-muted',
+      tone: 'border-navy-700/15 bg-navy-800/10 text-muted',
       text: (
         <>
-          <span className="tag border border-white/15 bg-white/5 text-[10px] text-muted">DEMO DATA</span>{' '}
+          <span className="tag border border-navy-700/20 bg-navy-800/10 text-[10px] text-muted">DEMO DATA</span>{' '}
           Sample rows are included and are labelled <code className="font-mono">DEMO</code> everywhere
           they appear. They are not real PayPal transactions.
         </>
@@ -68,7 +68,7 @@ export function ModeBanner() {
   if (messages.length === 0) return null
 
   return (
-    <div className="border-b border-white/8">
+    <div className="border-b border-navy-700/15">
       <div className="mx-auto max-w-[1400px] space-y-1 px-4 py-2 sm:px-6">
         {messages.map((message) => (
           <p

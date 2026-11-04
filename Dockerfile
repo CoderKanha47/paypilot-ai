@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Python deps
-COPY backend/pyproject.toml backend/uv.lock* ./
+COPY backend/pyproject.toml backend/uv.lock* backend/README.md ./
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -e . 2>/dev/null || pip install --no-cache-dir .
 
@@ -31,6 +31,7 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
 # Non-root user
 RUN useradd --no-create-home --uid 1000 appuser && \
+    mkdir -p /app/data && \
     chown -R appuser:appuser /app
 USER appuser
 
@@ -46,5 +47,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
 
 EXPOSE 8000
 
-# Run with gunicorn for production
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-w", "2", "-b", "0.0.0.0:8000", "app.main:app"]
+# Run with uvicorn for production (gunicorn not required)
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

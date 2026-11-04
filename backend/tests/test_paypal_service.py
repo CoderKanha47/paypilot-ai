@@ -342,3 +342,127 @@ def test_service_reports_sandbox_mode_with_credentials():
     service = PayPalService(settings, client=httpx.AsyncClient(transport=httpx.MockTransport(MockPayPal())))
     assert service.configured is True
     assert service.mode == "sandbox"
+
+
+# ------------------------------------------------------------ idempotency
+@pytest.mark.asyncio
+async def test_create_order_sends_paypal_request_id_header():
+    captured: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/oauth2/token"):
+            return httpx.Response(200, json={"access_token": "T", "expires_in": 32400})
+        captured.append(request)
+        return httpx.Response(201, json={
+            "id": "ORDERABC", "status": "PAYER_ACTION_REQUIRED",
+            "links": [{"rel": "approve", "href": "https://paypal/checkoutnow?token=ORDERABC"}],
+        })
+
+    service, client = make_service(handler, **configured())
+    try:
+        await service.create_order(
+            amount_minor=1000, currency="USD", description="Test",
+            idempotency_key="idem-test-123"
+        )
+        assert captured[0].headers.get("PayPal-Request-Id") == "idem-test-123"
+    finally:
+        await client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_capture_order_sends_paypal_request_id_header():
+    captured: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/oauth2/token"):
+            return httpx.Response(200, json={"access_token": "T", "expires_in": 32400})
+        captured.append(request)
+        return httpx.Response(201, json={
+            "id": "ORDERABC",
+            "status": "COMPLETED",
+            "purchase_units": [
+                {
+                    "amount": {"value": "10.00", "currency_code": "USD"},
+                    "payments": {
+                        "captures": [
+                            {
+                                "id": "CAP1",
+                                "status": "COMPLETED",
+                                "amount": {"value": "10.00", "currency_code": "USD"},
+                                "seller_receivable_breakdown": {
+                                    "gross_amount": {"value": "10.00", "currency_code": "USD"},
+                                    "paypal_fee": {"value": "0.59", "currency_code": "USD"},
+                                },
+                            }
+                        ]
+                    },
+                }
+            ],
+        })
+
+    service, client = make_service(handler, **configured())
+    try:
+        await service.capture_order("ORDERABC", idempotency_key="idem-capture-456")
+        assert captured[0].headers.get("PayPal-Request-Id") == "idem-capture-456"
+    finally:
+        await client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_create_order_without_idempotency_key_does_not_send_header():
+    captured: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/oauth2/token"):
+            return httpx.Response(200, json={"access_token": "T", "expires_in": 32400})
+        captured.append(request)
+        return httpx.Response(201, json={
+            "id": "ORDERABC", "status": "PAYER_ACTION_REQUIRED",
+            "links": [{"rel": "approve", "href": "https://paypal/checkoutnow?token=ORDERABC"}],
+        })
+
+    service, client = make_service(handler, **configured())
+    try:
+        await service.create_order(amount_minor=1000, currency="USD", description="Test")
+        assert "PayPal-Request-Id" not in captured[0].headers
+    finally:
+        await client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_capture_order_without_idempotency_key_does_not_send_header():
+    captured: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/oauth2/token"):
+            return httpx.Response(200, json={"access_token": "T", "expires_in": 32400})
+        captured.append(request)
+        return httpx.Response(201, json={
+            "id": "ORDERABC",
+            "status": "COMPLETED",
+            "purchase_units": [
+                {
+                    "amount": {"value": "10.00", "currency_code": "USD"},
+                    "payments": {
+                        "captures": [
+                            {
+                                "id": "CAP1",
+                                "status": "COMPLETED",
+                                "amount": {"value": "10.00", "currency_code": "USD"},
+                                "seller_receivable_breakdown": {
+                                    "gross_amount": {"value": "10.00", "currency_code": "USD"},
+                                    "paypal_fee": {"value": "0.59", "currency_code": "USD"},
+                                },
+                            }
+                        ]
+                    },
+                }
+            ],
+        })
+
+    service, client = make_service(handler, **configured())
+    try:
+        await service.capture_order("ORDERABC")
+        assert "PayPal-Request-Id" not in captured[0].headers
+    finally:
+        await client.aclose()

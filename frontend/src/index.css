@@ -10,6 +10,7 @@
   --font-mono:
     ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
 
+  /* Dark theme colors (default) */
   --color-ink: #e8ecf9;
   --color-muted: #98a2c0;
   --color-faint: #6b769a;
@@ -29,10 +30,51 @@
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
+
+  /* Light theme colors */
+  --color-ink-light: #1a1f36;
+  --color-muted-light: #5a6484;
+  --color-faint-light: #8a94b4;
+
+  --color-navy-50: #f8f9fc;
+  --color-navy-100: #edf0f7;
+  --color-navy-200: #d8dcee;
+  --color-navy-300: #b8bfe0;
+  --color-navy-400: #8a94b4;
+  --color-navy-500: #6b769a;
+  --color-navy-600: #555e85;
+  --color-navy-700: #434b6e;
+  --color-navy-800: #333954;
+  --color-navy-900: #232640;
+  --color-navy-950: #16182a;
+
+  --color-accent-light: #6a49f5;
+  --color-accent-soft-light: #7c5cff;
 }
 
 :root {
   color-scheme: dark;
+}
+
+/* Light theme - activated via .light class on html/body or [data-theme="light"] */
+html.light,
+[data-theme="light"] {
+  color-scheme: light;
+  --color-ink: var(--color-ink-light);
+  --color-muted: var(--color-muted-light);
+  --color-faint: var(--color-faint-light);
+
+  --color-navy-950: var(--color-navy-50);
+  --color-navy-900: var(--color-navy-100);
+  --color-navy-850: var(--color-navy-200);
+  --color-navy-800: var(--color-navy-300);
+  --color-navy-750: var(--color-navy-400);
+  --color-navy-700: var(--color-navy-500);
+  --color-navy-600: var(--color-navy-600);
+  --color-navy-500: var(--color-navy-700);
+
+  --color-accent: var(--color-accent-light);
+  --color-accent-soft: var(--color-accent-soft-light);
 }
 
 html,
@@ -49,6 +91,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 @layer base {

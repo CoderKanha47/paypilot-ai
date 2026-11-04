@@ -31,14 +31,17 @@ from app.config import Settings, get_settings, reset_settings_cache  # noqa: E40
 
 reset_settings_cache()
 
-from app.database import dispose_engine, init_db, session_scope  # noqa: E402
+from app.database import dispose_engine, init_db, session_scope, Base, get_engine  # noqa: E402
 from app.main import app as fastapi_app  # noqa: E402
 from app.models import AppMeta, Transaction, utcnow  # noqa: E402
 from app.money import to_minor  # noqa: E402
 from app.rate_limit import SlidingWindowLimiter  # noqa: E402
 
 dispose_engine()
-init_db()
+# Drop and recreate tables to ensure schema matches current models
+engine = get_engine()
+Base.metadata.drop_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 from fastapi.testclient import TestClient  # noqa: E402
 

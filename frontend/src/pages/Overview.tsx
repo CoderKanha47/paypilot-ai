@@ -85,7 +85,7 @@ export function Overview() {
         description="Every figure below is calculated from the transactions stored in this application."
         actions={
           <>
-            <span className="hidden items-center gap-1.5 rounded-lg border border-white/10 bg-navy-850 px-3 py-2 text-xs text-muted sm:flex">
+            <span className="hidden items-center gap-1.5 rounded-lg border border-navy-700/15 bg-navy-850 px-3 py-2 text-xs text-muted sm:flex">
               <Activity size={13} className="text-accent-soft" aria-hidden="true" />
               {data ? `Updated ${new Date().toLocaleTimeString()}` : 'Loading…'}
             </span>
@@ -153,7 +153,7 @@ export function Overview() {
       )}
 
       {metrics?.other_currencies.length ? (
-        <div className="mt-4 rounded-lg border border-white/8 bg-white/[0.03] px-4 py-3 text-xs text-muted">
+        <div className="mt-4 rounded-lg border border-navy-700/15 bg-navy-800/10 px-4 py-3 text-xs text-muted">
           Held in other currencies (never added to the {metrics.primary_currency} total):{' '}
           {metrics.other_currencies
             .map((entry) => `${money(entry.amount, entry.currency)} across ${entry.count}`)
@@ -163,7 +163,7 @@ export function Overview() {
 
       {metrics?.demo_data_included ? (
         <p className="mt-4 text-xs text-faint">
-          <span className="tag border border-white/15 bg-white/6 text-[10px] text-muted">DEMO DATA</span>{' '}
+          <span className="tag border border-navy-700/20 bg-navy-800/10 text-[10px] text-muted">DEMO DATA</span>{' '}
           Part of this dashboard comes from clearly-labelled sample rows.
         </p>
       ) : null}
@@ -282,7 +282,7 @@ export function Overview() {
 
       {/* --------------------------------------------------- recent activity */}
       <section className="card mt-6 overflow-hidden">
-        <div className="flex items-center justify-between gap-3 border-b border-white/8 px-5 py-4">
+        <div className="flex items-center justify-between gap-3 border-b border-navy-700/15 px-5 py-4">
           <div>
             <h2 className="text-sm font-semibold text-ink">Recent transactions</h2>
             <p className="mt-0.5 text-xs text-faint">Newest first, straight from SQLite</p>

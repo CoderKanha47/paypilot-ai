@@ -51,6 +51,7 @@ class DemoCheckout:
         return_url: str | None = None,
         cancel_url: str | None = None,
         intent: str = "CAPTURE",
+        idempotency_key: str | None = None,
     ) -> dict[str, Any]:
         return {
             "id": _demo_order_id(),
@@ -78,7 +79,7 @@ class DemoCheckout:
         )
 
     async def capture_order(
-        self, order_id: str, *, outcome: str = "approve"
+        self, order_id: str, *, idempotency_key: str | None = None, outcome: str = "approve"
     ) -> dict[str, Any]:
         """Simulate the payer's decision.
 

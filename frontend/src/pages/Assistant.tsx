@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Sparkles, Bot, User, Loader2 } from "lucide-react";
+import { Send, Sparkles, Bot, User, Loader2, FileText, Lightbulb, Link2, Shield } from "lucide-react";
 import { api, errorMessage } from "../lib/api";
 import { useAsync } from "../hooks/useAsync";
 import { useApp } from "../context/AppContext";
@@ -29,13 +29,85 @@ export function Assistant() {
     setBusy(true);
     try {
       const res = await api.post<ChatResponse>("/api/assistant/chat", { message: question, history: messages });
-      setMessages((prev) => [...prev, { role: "assistant", content: res.answer }]);
+      setMessages((prev) => [...prev, {
+        role: "assistant",
+        content: res.answer,
+        facts: res.facts,
+        recommendations: res.recommendations,
+        references: res.references,
+        confidence: res.confidence,
+        disclaimer: res.disclaimer,
+      }]);
     } catch (err) {
       setMessages((prev) => [...prev, { role: "assistant", content: `Sorry — ${errorMessage(err)}.` }]);
     } finally {
       setBusy(false);
     }
   };
+
+  const renderAssistantMessage = (m: ChatMessage) => (
+    <div className="flex gap-3">
+      <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-700">
+        <Bot size={15} />
+      </span>
+      <div className="max-w-[80%] rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-800">
+        <p className="whitespace-pre-wrap">{m.content}</p>
+        {m.facts && m.facts.length > 0 && (
+          <div className="mt-3 space-y-1.5 border-t border-slate-200 pt-3">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-violet-700">
+              <FileText size={12} /> Facts
+            </div>
+            <ul className="ml-4 space-y-1 list-disc text-slate-700">
+              {m.facts.map((fact, i) => (
+                <li key={i} className="text-sm">{fact}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {m.recommendations && m.recommendations.length > 0 && (
+          <div className="mt-3 space-y-1.5 border-t border-slate-200 pt-3">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-amber-700">
+              <Lightbulb size={12} /> Recommendations
+            </div>
+            <ul className="ml-4 space-y-1 list-disc text-slate-700">
+              {m.recommendations.map((rec, i) => (
+                <li key={i} className="text-sm">{rec}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {m.references && m.references.length > 0 && (
+          <div className="mt-3 space-y-1.5 border-t border-slate-200 pt-3">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-blue-700">
+              <Link2 size={12} /> Transaction References
+            </div>
+            <ul className="ml-4 space-y-1 list-disc text-slate-700">
+              {m.references.map((ref, i) => (
+                <li key={i} className="text-sm">
+                  <a
+                    href={`/transactions/${ref}`}
+                    className="text-blue-600 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {ref}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {m.confidence && (
+          <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
+            <Shield size={12} /> Confidence: <span className="font-medium capitalize">{m.confidence}</span>
+          </div>
+        )}
+        {m.disclaimer && (
+          <p className="mt-2 text-xs text-slate-500 italic">{m.disclaimer}</p>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div className="mx-auto flex h-[calc(100vh-7rem)] max-w-4xl flex-col">
@@ -65,18 +137,17 @@ export function Assistant() {
 
         {messages.map((m, i) => (
           <div key={i} className={`flex gap-3 ${m.role === "user" ? "justify-end" : ""}`}>
-            {m.role === "assistant" && (
-              <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-700">
-                <Bot size={15} />
-              </span>
-            )}
-            <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-800"}`}>
-              <p className="whitespace-pre-wrap">{m.content}</p>
-            </div>
-            {m.role === "user" && (
-              <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-600">
-                <User size={15} />
-              </span>
+            {m.role === "assistant" ? (
+              renderAssistantMessage(m)
+            ) : (
+              <>
+                <div className="max-w-[80%] rounded-2xl bg-slate-900 px-4 py-2.5 text-sm text-white">
+                  <p className="whitespace-pre-wrap">{m.content}</p>
+                </div>
+                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-600">
+                  <User size={15} />
+                </span>
+              </>
             )}
           </div>
         ))}

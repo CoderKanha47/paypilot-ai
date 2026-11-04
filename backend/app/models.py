@@ -37,6 +37,7 @@ class Transaction(Base):
     id: Mapped[str] = mapped_column(String(40), primary_key=True, default=lambda: new_id("txn"))
     paypal_order_id: Mapped[str] = mapped_column(String(64), unique=True, index=True)
     paypal_capture_id: Mapped[str | None] = mapped_column(String(64), index=True)
+    paypal_request_id: Mapped[str | None] = mapped_column(String(64), index=True)
     paypal_intent: Mapped[str] = mapped_column(String(16), default="CAPTURE")
 
     # Normalised application status: pending | completed | declined | failed |

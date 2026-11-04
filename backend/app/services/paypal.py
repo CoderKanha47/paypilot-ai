@@ -287,6 +287,7 @@ class PayPalService:
         return_url: str | None = None,
         cancel_url: str | None = None,
         intent: str = "CAPTURE",
+        idempotency_key: str | None = None,
     ) -> dict[str, Any]:
         """Create a server-side order (``intent=CAPTURE``) on PayPal."""
         try:
@@ -321,18 +322,28 @@ class PayPalService:
         if note:
             body["purchase_units"][0]["custom_id"] = (reference or note)[:127]
 
-        payload = await self._request("POST", "/v2/checkout/orders", json_body=body)
+        headers = {}
+        if idempotency_key:
+            headers["PayPal-Request-Id"] = idempotency_key
+
+        payload = await self._request("POST", "/v2/checkout/orders", json_body=body, headers=headers)
         return self._validate_order(payload, context="create order")
 
     async def get_order(self, order_id: str) -> dict[str, Any]:
         payload = await self._request("GET", f"/v2/checkout/orders/{self._id(order_id)}")
         return self._validate_order(payload, context="get order")
 
-    async def capture_order(self, order_id: str) -> dict[str, Any]:
+    async def capture_order(
+        self, order_id: str, *, idempotency_key: str | None = None
+    ) -> dict[str, Any]:
         """Capture an order the payer has approved. Idempotent where PayPal allows."""
+        headers = {}
+        if idempotency_key:
+            headers["PayPal-Request-Id"] = idempotency_key
+
         try:
             payload = await self._request(
-                "POST", f"/v2/checkout/orders/{self._id(order_id)}/capture", json_body={}
+                "POST", f"/v2/checkout/orders/{self._id(order_id)}/capture", json_body={}, headers=headers
             )
         except PayPalError as exc:
             if exc.name in {"ORDER_ALREADY_CAPTURED", "CAPTURE_ORDER_ALREADY_CAPTURED"} or (

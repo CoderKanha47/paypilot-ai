@@ -214,7 +214,7 @@ export function NewPayment() {
                   ? 'border-accent/40 bg-accent/8'
                   : state === 'done'
                     ? 'border-success/25 bg-success/8'
-                    : 'border-white/8 bg-navy-850'
+                    : 'border-navy-700/15 bg-navy-850'
               }`}
             >
               <span
@@ -223,7 +223,7 @@ export function NewPayment() {
                     ? 'bg-success/20 text-success'
                     : state === 'current'
                       ? 'bg-accent text-white'
-                      : 'bg-white/8 text-faint'
+                      : 'bg-navy-700/20 text-faint'
                 }`}
               >
                 {state === 'done' ? <CheckCircle2 size={13} aria-hidden="true" /> : index + 1}
@@ -356,7 +356,7 @@ export function NewPayment() {
                 )}
               </div>
 
-              <div className="mt-6 flex flex-col gap-3 border-t border-white/8 pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-6 flex flex-col gap-3 border-t border-navy-700/15 pt-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.09em] text-faint">You will charge</p>
                   <p className="text-xl font-semibold tabular-nums text-ink">{summaryAmount}</p>
@@ -477,7 +477,7 @@ export function NewPayment() {
 
           {phase === 'cancelled' ? (
             <div className="card p-6 text-center">
-              <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border border-white/12 bg-white/5 text-muted">
+              <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border border-navy-700/20 bg-navy-800/10 text-muted">
                 <ArrowLeft size={22} aria-hidden="true" />
               </span>
               <h2 className="mt-4 text-base font-semibold text-ink">Payment request cancelled</h2>
@@ -697,7 +697,7 @@ function OutcomePanel({
         </div>
       </dl>
 
-      <div className="flex flex-wrap gap-2 border-t border-white/8 px-5 py-4">
+      <div className="flex flex-wrap gap-2 border-t border-navy-700/15 px-5 py-4">
         <Link to={`/transactions/${transaction.id}`} className="btn btn-primary">
           View transaction
         </Link>

@@ -150,7 +150,7 @@ export function PayPalCheckout({
 
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between gap-3 rounded-lg border border-white/8 bg-navy-900 px-3.5 py-2.5">
+      <div className="mb-3 flex items-center justify-between gap-3 rounded-lg border border-navy-700/15 bg-navy-900 px-3.5 py-2.5">
         <div className="min-w-0">
           <p className="truncate text-xs font-medium text-ink">{description}</p>
           <p className="font-mono text-[11px] text-faint">Order {orderId}</p>
@@ -161,7 +161,7 @@ export function PayPalCheckout({
       </div>
 
       {sdkState === 'loading' ? (
-        <div className="flex items-center justify-center gap-2 rounded-lg border border-white/8 bg-navy-900 py-8 text-sm text-muted">
+        <div className="flex items-center justify-center gap-2 rounded-lg border border-navy-700/15 bg-navy-900 py-8 text-sm text-muted">
           <Loader2 size={16} className="animate-spin text-accent-soft" aria-hidden="true" />
           Loading the PayPal checkout…
         </div>

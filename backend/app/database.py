@@ -91,9 +91,12 @@ def init_db() -> None:
     Base.metadata.create_all(bind=get_engine())
 
 
-def dispose_engine() -> None:
+def dispose_engine() -> Engine | None:
     global _engine, _SessionLocal
     if _engine is not None:
+        engine = _engine
         _engine.dispose()
-    _engine = None
-    _SessionLocal = None
+        _engine = None
+        _SessionLocal = None
+        return engine
+    return None
