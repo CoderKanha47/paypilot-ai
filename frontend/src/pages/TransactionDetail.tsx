@@ -69,19 +69,19 @@ export function TransactionDetail() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="mt-1 text-3xl font-semibold tracking-tight">{money(tx.amount, tx.currency)}</p>
-            <p className="mt-1 text-sm text-slate-500">{tx.description}</p>
+            <p className="mt-1 text-sm text-muted">{tx.description}</p>
           </div>
           <StatusBadge status={tx.status} size="md" />
         </div>
 
-        <dl className="mt-6 grid gap-x-8 gap-y-3 border-t border-slate-200 pt-5 text-sm sm:grid-cols-2">
+        <dl className="mt-6 grid gap-x-8 gap-y-3 border-t border-navy-700/15 pt-5 text-sm sm:grid-cols-2">
           {rows.map(([label, value]) => (
             <div key={label} className="flex items-center justify-between gap-3 sm:justify-start">
-              <dt className="text-slate-500">{label}</dt>
+              <dt className="text-muted">{label}</dt>
               <dd className="flex items-center gap-2 font-medium">
                 <span className="max-w-[22ch] truncate sm:max-w-[32ch]" title={value}>{value}</span>
                 <button
-                  className="text-slate-400 hover:text-slate-700"
+                  className="text-faint hover:text-ink"
                   title={`Copy ${label}`}
                   onClick={() => {
                     void navigator.clipboard?.writeText(value);
@@ -94,7 +94,7 @@ export function TransactionDetail() {
           ))}
         </dl>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-slate-200 pt-5">
+        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-navy-700/15 pt-5">
           {config?.paypal.configured && tx.mode === "sandbox" && tx.paypal_order_id && (
             <a
               className="btn btn-ghost inline-flex items-center gap-2"
@@ -111,7 +111,7 @@ export function TransactionDetail() {
             </button>
           )}
           {tx.mode === "demo" && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-faint">
               This record was produced by the labelled demo simulator — no money moved.
             </p>
           )}
@@ -120,15 +120,15 @@ export function TransactionDetail() {
 
       <div className="card p-6">
         <h3 className="text-sm font-semibold">Status history</h3>
-        <ol className="mt-4 space-y-4 border-l border-slate-200 pl-5">
+        <ol className="mt-4 space-y-4 border-l border-navy-700/15 pl-5">
           {tx.events?.map((event) => (
             <li key={event.id} className="relative">
-              <span className="absolute -left-[27px] top-1.5 h-3 w-3 rounded-full border-2 border-white bg-violet-500" />
+              <span className="absolute -left-[27px] top-1.5 h-3 w-3 rounded-full border-2 border-white bg-accent" />
               <div className="flex items-center gap-3">
                 <StatusBadge status={event.status} size="sm" />
-                <span className="text-xs text-slate-500">{formatDateTime(event.created_at)}</span>
+                <span className="text-xs text-faint">{formatDateTime(event.created_at)}</span>
               </div>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-muted">
                 {event.event_type === "sync" ? "Reconciled from PayPal" : `Recorded by ${event.event_type}`}
               </p>
             </li>

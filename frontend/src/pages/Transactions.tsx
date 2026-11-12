@@ -78,19 +78,19 @@ export function Transactions() {
 
       {/* ------------------------------------------------------------ filters */}
       <div className="card mb-5 p-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 items-start">
           <div className="relative xl:col-span-1">
-            <Search
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-faint"
-              aria-hidden="true"
-            />
             <label htmlFor="txn-search" className="sr-only">
               Search transactions
             </label>
+            <Search
+              size={16}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-faint"
+              aria-hidden="true"
+            />
             <input
               id="txn-search"
-              className="input pl-9"
+              className="input pl-10"
               placeholder="Search description, reference, order id…"
               value={search}
               onChange={(event) => update({ search: event.target.value })}
@@ -142,7 +142,7 @@ export function Transactions() {
           </div>
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="mt-4 pt-3 border-t border-navy-700/15 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-faint">
             {loading ? 'Loading…' : `${total} record${total === 1 ? '' : 's'} matched`}
           </p>

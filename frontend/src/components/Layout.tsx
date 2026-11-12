@@ -9,7 +9,6 @@ import {
   Moon,
   ReceiptText,
   Settings,
-  ShieldCheck,
   Sun,
   X,
 } from 'lucide-react'
@@ -41,7 +40,6 @@ function Logo() {
 }
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
-  const { config } = useApp()
   return (
     <nav className="flex flex-1 flex-col gap-1 px-3" aria-label="Primary">
       {NAV.map((item) => (
@@ -65,25 +63,17 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 
       <div className="mt-auto space-y-3 px-3 pb-3 pt-6">
         <div className="rounded-lg border border-navy-700/15 bg-navy-850 p-3">
-          <div className="flex items-center gap-2 text-xs">
-            <ShieldCheck size={14} className="text-success" aria-hidden="true" />
-            <span className="font-semibold text-ink">
-              {config?.paypal.mode === 'sandbox'
-                ? 'PayPal Sandbox'
-                : config?.paypal.mode === 'live'
-                  ? 'LIVE payments'
-                  : 'Demo checkout'}
-            </span>
+          <div className="flex items-center gap-3">
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-accent/20 text-accent font-semibold text-sm">
+              P
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-ink truncate">PayPilot AI</p>
+              <p className="text-[11px] text-faint truncate">ADMIN</p>
+            </div>
+            <span className="h-2 w-2 rounded-full bg-success" title="Active session" />
           </div>
-          <p className="mt-1.5 text-[11px] leading-relaxed text-faint">
-            {config?.paypal.configured
-              ? 'Orders are created and captured server-side against api-m.sandbox.paypal.com.'
-              : 'Add Sandbox credentials in Settings to create real PayPal orders.'}
-          </p>
         </div>
-        <p className="px-1 text-[10px] leading-relaxed text-faint">
-          Hackathon build · Not audited for production funds.
-        </p>
       </div>
     </nav>
   )
@@ -101,8 +91,8 @@ function ModeChip() {
           live
             ? 'border border-danger/35 bg-danger/12 text-danger'
             : sandbox
-              ? 'border border-success/30 bg-success/12 text-success'
-              : 'border border-warning/35 bg-warning/12 text-warning'
+            ? 'border border-success/30 bg-success/12 text-success'
+            : 'border border-warning/35 bg-warning/12 text-warning'
         }`}
       >
         <span
@@ -112,7 +102,7 @@ function ModeChip() {
         {live ? 'LIVE' : sandbox ? 'SANDBOX' : 'DEMO'}
       </span>
       <span className="hidden text-[11px] text-faint md:inline">
-        AI: <span className="text-muted">{config.ai.provider}</span>
+        AI: <span className="text-muted">{config.ai.model}</span>
       </span>
       {health?.database === 'connected' ? (
         <span className="hidden h-1.5 w-1.5 rounded-full bg-success lg:inline" title="Database connected" />

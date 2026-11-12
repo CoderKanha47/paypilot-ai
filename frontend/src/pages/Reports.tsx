@@ -44,16 +44,16 @@ export function Reports() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-lg font-semibold">PayPilot AI — Operations report</h2>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted">
               Period: {formatDateTime(data.monthly[0]?.month ?? data.generated_at)} → {formatDateTime(data.generated_at)}
             </p>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-faint">
             Generated {formatDateTime(data.generated_at)} · currency: {data.currency}
           </p>
         </div>
 
-        <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-200 pt-5 sm:grid-cols-4">
+        <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-navy-700/15 pt-5 sm:grid-cols-4">
           {[
             ["Transactions", String(data.transaction_count)],
             ["Captured volume", money(data.total_captured, data.currency)],
@@ -61,7 +61,7 @@ export function Reports() {
             ["Status types", String(data.status_breakdown.length)],
           ].map(([label, value]) => (
             <div key={label}>
-              <dt className="text-xs text-slate-500">{label}</dt>
+              <dt className="text-xs text-faint">{label}</dt>
               <dd className="mt-1 text-lg font-semibold">{value}</dd>
             </div>
           ))}
@@ -76,12 +76,12 @@ export function Reports() {
               <li key={entry.status}>
                 <div className="flex items-center justify-between text-sm">
                   <StatusBadge status={entry.status} />
-                  <span className="text-slate-600">
+                  <span className="text-muted">
                     {entry.count} · {money(entry.amount, entry.currency)}
                   </span>
                 </div>
-                <div className="mt-1.5 h-2 rounded-full bg-slate-100">
-                  <div className="h-2 rounded-full bg-violet-500" style={{ width: `${(entry.count / maxStatus) * 100}%` }} />
+                <div className="mt-1.5 h-2 rounded-full bg-navy-700/15">
+                  <div className="h-2 rounded-full bg-accent" style={{ width: `${(entry.count / maxStatus) * 100}%` }} />
                 </div>
               </li>
             ))}
@@ -91,7 +91,7 @@ export function Reports() {
         <div className="card p-6">
           <h3 className="text-sm font-semibold">By currency</h3>
           <table className="mt-4 w-full text-sm">
-            <thead className="text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="text-left text-xs uppercase tracking-wide text-faint">
               <tr>
                 <th className="pb-2">Currency</th>
                 <th className="pb-2 text-right">Count</th>
@@ -99,7 +99,7 @@ export function Reports() {
                 <th className="pb-2 text-right">Pending</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-navy-700/15">
               {Object.entries(
                 data.status_breakdown.reduce(
                   (acc: Record<string, { count: number; captured: number; pending: number }>, s: StatusCount) => {
@@ -124,7 +124,7 @@ export function Reports() {
 
       <div className="card p-6">
         <h3 className="text-sm font-semibold">Executive summary</h3>
-        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-600">
+        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted">
           {data.notes.length === 0 && <EmptyState icon={Sparkles} title="No narrative" description="No activity in this period." />}
           {data.notes.map((line, i) => (
             <li key={i}>{line}</li>

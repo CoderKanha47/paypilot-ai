@@ -32,24 +32,30 @@
   --color-danger: #ef4444;
 
   /* Light theme colors */
-  --color-ink-light: #1a1f36;
-  --color-muted-light: #5a6484;
-  --color-faint-light: #8a94b4;
+  --color-ink-light: #0f172a;
+  --color-muted-light: #64748b;
+  --color-faint-light: #94a3b8;
 
-  --color-navy-50: #f8f9fc;
-  --color-navy-100: #edf0f7;
-  --color-navy-200: #d8dcee;
-  --color-navy-300: #b8bfe0;
-  --color-navy-400: #8a94b4;
-  --color-navy-500: #6b769a;
-  --color-navy-600: #555e85;
-  --color-navy-700: #434b6e;
-  --color-navy-800: #333954;
-  --color-navy-900: #232640;
-  --color-navy-950: #16182a;
+  --color-navy-50: #f5f6fa;
+  --color-navy-100: #ffffff;
+  --color-navy-200: #f8f9fc;
+  --color-navy-300: #eceef4;
+  --color-navy-400: #e3e5ee;
+  --color-navy-500: #cbd5e1;
+  --color-navy-600: #94a3b8;
+  --color-navy-700: #64748b;
+  --color-navy-800: #475569;
+  --color-navy-900: #334155;
+  --color-navy-950: #1e293b;
 
   --color-accent-light: #6a49f5;
   --color-accent-soft-light: #7c5cff;
+
+  /* Light theme semantic colors (darker hues for AA contrast with opacity tints) */
+  --color-success-light: #166534;
+  --color-warning-light: #92400e;
+  --color-danger-light: #991b1b;
+  --color-info-light: #1e40af;
 }
 
 :root {
@@ -64,17 +70,23 @@ html.light,
   --color-muted: var(--color-muted-light);
   --color-faint: var(--color-faint-light);
 
-  --color-navy-950: var(--color-navy-50);
-  --color-navy-900: var(--color-navy-100);
-  --color-navy-850: var(--color-navy-200);
-  --color-navy-800: var(--color-navy-300);
-  --color-navy-750: var(--color-navy-400);
-  --color-navy-700: var(--color-navy-500);
-  --color-navy-600: var(--color-navy-600);
-  --color-navy-500: var(--color-navy-700);
+  --color-navy-950: var(--color-navy-50);   /* page background */
+  --color-navy-900: var(--color-navy-100);  /* sidebar / header background */
+  --color-navy-850: var(--color-navy-100);  /* card / surface background */
+  --color-navy-800: var(--color-navy-200);  /* secondary surface (table header, inputs, hover) */
+  --color-navy-750: var(--color-navy-300);  /* table row dividers */
+  --color-navy-700: var(--color-navy-400);  /* borders */
+  --color-navy-600: var(--color-navy-500);  /* muted borders / disabled */
+  --color-navy-500: var(--color-navy-600);  /* faint text */
 
   --color-accent: var(--color-accent-light);
   --color-accent-soft: var(--color-accent-soft-light);
+
+  /* Semantic colors for light mode (darker hues for AA contrast with opacity tints) */
+  --color-success: var(--color-success-light);
+  --color-warning: var(--color-warning-light);
+  --color-danger: var(--color-danger-light);
+  --color-info: var(--color-info-light);
 }
 
 html,
@@ -97,6 +109,11 @@ body {
 @layer base {
   * {
     border-color: rgb(255 255 255 / 0.07);
+  }
+
+  html.light *,
+  [data-theme="light"] * {
+    border-color: var(--color-navy-400);
   }
 
   h1,
@@ -124,12 +141,27 @@ body {
   border-radius: 0.875rem;
 }
 
+html.light .card,
+[data-theme="light"] .card {
+  background-color: #ffffff;
+  border-color: var(--color-navy-400);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
 .card-raised {
   background: linear-gradient(180deg, rgb(255 255 255 / 0.03), rgb(255 255 255 / 0));
   background-color: var(--color-navy-850);
   border: 1px solid rgb(255 255 255 / 0.08);
   border-radius: 0.875rem;
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset;
+}
+
+html.light .card-raised,
+[data-theme="light"] .card-raised {
+  background: #ffffff;
+  background-color: #ffffff;
+  border-color: var(--color-navy-400);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
 }
 
 .input {
@@ -143,12 +175,23 @@ body {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+html.light .input,
+[data-theme="light"] .input {
+  background-color: var(--color-navy-200);
+  border-color: var(--color-navy-400);
+}
+
 .input::placeholder {
   color: var(--color-faint);
 }
 
 .input:hover:not(:disabled) {
   border-color: rgb(255 255 255 / 0.18);
+}
+
+html.light .input:hover:not(:disabled),
+[data-theme="light"] .input:hover:not(:disabled) {
+  border-color: var(--color-navy-500);
 }
 
 .input:focus {
@@ -205,6 +248,18 @@ body {
   color: var(--color-ink);
 }
 
+html.light .btn-ghost,
+[data-theme="light"] .btn-ghost {
+  background-color: var(--color-navy-200);
+  border-color: var(--color-navy-400);
+  color: var(--color-ink);
+}
+
+html.light .btn-ghost:not(:disabled):hover,
+[data-theme="light"] .btn-ghost:not(:disabled):hover {
+  background-color: var(--color-navy-300);
+}
+
 .btn-ghost:not(:disabled):hover {
   background-color: rgb(255 255 255 / 0.08);
 }
@@ -213,6 +268,18 @@ body {
   background-color: rgb(239 68 68 / 0.12);
   border-color: rgb(239 68 68 / 0.35);
   color: #fca5a5;
+}
+
+html.light .btn-danger,
+[data-theme="light"] .btn-danger {
+  background-color: rgb(239 68 68 / 0.1);
+  border-color: rgb(239 68 68 / 0.2);
+  color: var(--color-danger);
+}
+
+html.light .btn-danger:not(:disabled):hover,
+[data-theme="light"] .btn-danger:not(:disabled):hover {
+  background-color: rgb(239 68 68 / 0.15);
 }
 
 .tag {
@@ -240,6 +307,17 @@ body {
   border-radius: 0.375rem;
 }
 
+html.light .skeleton,
+[data-theme="light"] .skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-navy-300) 25%,
+    var(--color-navy-400) 37%,
+    var(--color-navy-300) 63%
+  );
+  background-size: 400% 100%;
+}
+
 @keyframes shimmer {
   0% {
     background-position: 100% 50%;
@@ -261,6 +339,11 @@ body {
   scrollbar-color: rgb(255 255 255 / 0.15) transparent;
 }
 
+html.light *,
+[data-theme="light"] * {
+  scrollbar-color: var(--color-navy-500) transparent;
+}
+
 *::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -273,9 +356,120 @@ body {
   background-clip: content-box;
 }
 
+html.light *::-webkit-scrollbar-thumb,
+[data-theme="light"] *::-webkit-scrollbar-thumb {
+  background: var(--color-navy-500);
+}
+
 *::-webkit-scrollbar-thumb:hover {
   background: rgb(255 255 255 / 0.22);
   background-clip: content-box;
+}
+
+html.light *::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] *::-webkit-scrollbar-thumb:hover {
+  background: var(--color-navy-600);
+  background-clip: content-box;
+}
+
+/* Light mode chart tooltip overrides */
+html.light .recharts-tooltip-wrapper .recharts-tooltip,
+[data-theme="light"] .recharts-tooltip-wrapper .recharts-tooltip {
+  background: #ffffff !important;
+  border-color: var(--color-navy-400) !important;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.1) !important;
+}
+
+html.light .recharts-tooltip-wrapper .recharts-tooltip label,
+[data-theme="light"] .recharts-tooltip-wrapper .recharts-tooltip label {
+  color: var(--color-muted) !important;
+}
+
+html.light .recharts-tooltip-wrapper .recharts-tooltip .recharts-tooltip-item,
+[data-theme="light"] .recharts-tooltip-wrapper .recharts-tooltip .recharts-tooltip-item {
+  color: var(--color-ink) !important;
+}
+
+/* Light mode layout overrides */
+html.light aside,
+[data-theme="light"] aside {
+  background-color: #ffffff;
+  border-right-color: var(--color-navy-400);
+}
+
+html.light aside .border-b,
+[data-theme="light"] aside .border-b {
+  border-color: var(--color-navy-400);
+}
+
+html.light header,
+[data-theme="light"] header {
+  background-color: rgba(245, 246, 250, 0.95);
+  border-color: var(--color-navy-400);
+}
+
+html.light .bg-navy-900,
+[data-theme="light"] .bg-navy-900 {
+  background-color: #ffffff;
+}
+
+html.light .border-navy-700\/15,
+[data-theme="light"] .border-navy-700\/15 {
+  border-color: var(--color-navy-400);
+}
+
+html.light .bg-navy-850,
+[data-theme="light"] .bg-navy-850 {
+  background-color: #ffffff;
+}
+
+html.light .hover\:bg-navy-800\/10:hover,
+[data-theme="light"] .hover\:bg-navy-800\/10:hover {
+  background-color: var(--color-navy-200);
+}
+
+html.light .bg-navy-950\/88,
+[data-theme="light"] .bg-navy-950\/88 {
+  background-color: rgba(245, 246, 250, 0.95);
+}
+
+html.light .bg-navy-950\/65,
+[data-theme="light"] .bg-navy-950\/65 {
+  background-color: rgba(245, 246, 250, 0.65);
+}
+
+/* Light mode tag/badge overrides for demo/sandbox tags */
+html.light .tag.border-navy-700\/20,
+[data-theme="light"] .tag.border-navy-700\/20 {
+  border-color: var(--color-navy-400);
+}
+
+html.light .tag.bg-navy-800\/10,
+[data-theme="light"] .tag.bg-navy-800\/10 {
+  background-color: var(--color-navy-200);
+}
+
+html.light .tag.border-success\/25,
+[data-theme="light"] .tag.border-success\/25 {
+  border-color: var(--color-success);
+}
+
+html.light .tag.bg-success\/10,
+[data-theme="light"] .tag.bg-success\/10 {
+  background-color: rgb(var(--color-success) / 0.1);
+}
+
+/* Light mode chart gridlines */
+html.light .recharts-cartesian-grid-horizontal line,
+html.light .recharts-cartesian-grid-vertical line,
+[data-theme="light"] .recharts-cartesian-grid-horizontal line,
+[data-theme="light"] .recharts-cartesian-grid-vertical line {
+  stroke: var(--color-navy-400);
+}
+
+html.light .recharts-axis line,
+[data-theme="light"] .recharts-axis line {
+  stroke: var(--color-navy-400);
 }
 
 /* ------------------------------------------------------------------- print */

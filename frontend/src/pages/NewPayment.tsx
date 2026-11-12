@@ -5,10 +5,8 @@ import {
   CheckCircle2,
   CirclePlus,
   Clock3,
-  ExternalLink,
   Info,
   Loader2,
-  ShieldCheck,
   ThumbsDown,
   ThumbsUp,
   XOctagon,
@@ -241,20 +239,19 @@ export function NewPayment() {
         })}
       </ol>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-        {/* ------------------------------------------------------- main card */}
-        <div className="lg:col-span-2">
-          {actionError ? (
-            <div className="mb-4">
-              <ErrorBanner
-                title="Payment step failed"
-                message={actionError.message}
-                errors={actionError.errors}
-              />
-            </div>
-          ) : null}
+      {phase === 'form' || phase === 'creating' ? (
+        <div className="flex justify-center">
+          <div className="w-full max-w-[900px]">
+            {actionError ? (
+              <div className="mb-4">
+                <ErrorBanner
+                  title="Payment step failed"
+                  message={actionError.message}
+                  errors={actionError.errors}
+                />
+              </div>
+            ) : null}
 
-          {phase === 'form' || phase === 'creating' ? (
             <form className="card p-5 sm:p-6" onSubmit={createOrder} noValidate>
               <h2 className="text-sm font-semibold text-ink">Payment details</h2>
 
@@ -287,7 +284,6 @@ export function NewPayment() {
                       id="amount"
                       className={`input pr-16 tabular-nums ${fieldErrors.amount ? 'input-error' : ''}`}
                       inputMode="decimal"
-                      placeholder="149.99"
                       value={form.amount}
                       onChange={(event) => setForm({ ...form, amount: event.target.value })}
                       disabled={busy}
@@ -313,7 +309,7 @@ export function NewPayment() {
                 <input
                   id="description"
                   className={`input ${fieldErrors.description ? 'input-error' : ''}`}
-                  placeholder="Brand identity package — Northwind Studio"
+                  placeholder="add description for the order"
                   value={form.description}
                   onChange={(event) => setForm({ ...form, description: event.target.value })}
                   maxLength={250}
@@ -340,7 +336,6 @@ export function NewPayment() {
                 <input
                   id="reference"
                   className={`input font-mono text-[13px] ${fieldErrors.customer_reference ? 'input-error' : ''}`}
-                  placeholder="INV-2026-014"
                   value={form.customer_reference}
                   onChange={(event) => setForm({ ...form, customer_reference: event.target.value })}
                   maxLength={120}
@@ -350,8 +345,7 @@ export function NewPayment() {
                   <p className="mt-1.5 text-xs text-danger">{fieldErrors.customer_reference}</p>
                 ) : (
                   <p className="mt-1.5 text-xs text-faint">
-                    Passed to PayPal as <code className="font-mono">custom_id</code> and{' '}
-                    <code className="font-mono">invoice_id</code> for reconciliation.
+                    Add reference number if you have any
                   </p>
                 )}
               </div>
@@ -367,59 +361,73 @@ export function NewPayment() {
                 </button>
               </div>
             </form>
-          ) : null}
-
-          {phase === 'awaiting' || phase === 'capturing' ? (
-            <div className="card p-5 sm:p-6">
-              <div className="mb-4 flex items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-sm font-semibold text-ink">Approve the payment</h2>
-                  <p className="mt-1 text-xs leading-relaxed text-muted">
-                    The order now exists on PayPal. Approve it to continue — the app will capture and
-                    verify it on the server.
-                  </p>
-                </div>
-                <StatusBadge status={order?.status ?? 'pending'} />
-              </div>
-
-              {demoMode ? (
-                <DemoApprovalPanel
-                  pending={phase === 'capturing'}
-                  onOutcome={(outcome) => capture(order!.order_id, outcome)}
-                  onCancel={cancel}
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          {/* ------------------------------------------------------- main card */}
+          <div className="lg:col-span-2">
+            {actionError ? (
+              <div className="mb-4">
+                <ErrorBanner
+                  title="Payment step failed"
+                  message={actionError.message}
+                  errors={actionError.errors}
                 />
-              ) : order ? (
-                <>
-                  <PayPalCheckout
-                    orderId={order.order_id}
-                    clientId={order.paypal_client_id}
-                    currency={order.sdk_currency}
-                    amount={money(order.amount, order.currency)}
-                    description={order.description}
-                    disabled={phase === 'capturing'}
-                    onApproved={(orderId) => capture(orderId)}
-                    onCancelled={cancel}
-                    onError={(message) => {
-                      setActionError({ message })
-                    }}
+              </div>
+            ) : null}
+
+            {phase === 'awaiting' || phase === 'capturing' ? (
+              <div className="card p-5 sm:p-6">
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <div>
+                    <h2 className="text-sm font-semibold text-ink">Approve the payment</h2>
+                    <p className="mt-1 text-xs leading-relaxed text-muted">
+                      The order now exists on PayPal. Approve it to continue — the app will capture and
+                      verify it on the server.
+                    </p>
+                  </div>
+                  <StatusBadge status={order?.status ?? 'pending'} />
+                </div>
+
+                {demoMode ? (
+                  <DemoApprovalPanel
+                    pending={phase === 'capturing'}
+                    onOutcome={(outcome) => capture(order!.order_id, outcome)}
+                    onCancel={cancel}
                   />
-                  {order.approve_link || order.approval_url ? (
-                    <HostedCheckoutLink href={order.approve_link ?? order.approval_url ?? ''} />
-                  ) : null}
-                </>
-              ) : null}
+                ) : order ? (
+                  <>
+                    <PayPalCheckout
+                      orderId={order.order_id}
+                      clientId={order.paypal_client_id}
+                      currency={order.sdk_currency}
+                      amount={money(order.amount, order.currency)}
+                      description={order.description}
+                      disabled={phase === 'capturing'}
+                      onApproved={(orderId) => capture(orderId)}
+                      onCancelled={cancel}
+                      onError={(message) => {
+                        setActionError({ message })
+                      }}
+                    />
+                    {order.approve_link || order.approval_url ? (
+                      <HostedCheckoutLink href={order.approve_link ?? order.approval_url ?? ''} />
+                    ) : null}
+                  </>
+                ) : null}
 
-              {order?.notice ? (
-                <p className="mt-4 rounded-lg border border-warning/25 bg-warning/8 p-3 text-xs leading-relaxed text-warning">
-                  {order.notice}
-                </p>
-              ) : null}
+                {order?.notice ? (
+                  <p className="mt-4 rounded-lg border border-warning/25 bg-warning/8 p-3 text-xs leading-relaxed text-warning">
+                    {order.notice}
+                  </p>
+                ) : null}
 
-              <button type="button" className="btn btn-ghost mt-4" onClick={cancel}>
-                Cancel this request
-              </button>
-            </div>
-          ) : null}
+                <button type="button" className="btn btn-ghost mt-4" onClick={cancel}>
+                  Cancel this request
+                </button>
+              </div>
+            ) : null}
 
           {phase === 'success' && result ? (
             <OutcomePanel
@@ -494,66 +502,34 @@ export function NewPayment() {
 
         {/* ------------------------------------------------------- side rail */}
         <aside className="space-y-4">
-          <div className="card p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-ink">
-              <ShieldCheck size={14} className="text-success" aria-hidden="true" />
-              How this works
+          {order && (
+            <div className="card p-4">
+              <h3 className="text-xs font-semibold text-ink uppercase tracking-[0.08em]">Order summary</h3>
+              <dl className="mt-3 space-y-3 text-sm">
+                <div>
+                  <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">Amount</dt>
+                  <dd className="mt-0.5 font-semibold tabular-nums text-ink">
+                    {money(order.amount, order.currency)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">Status</dt>
+                  <dd className="mt-0.5">
+                    <StatusBadge status={order.status} />
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">PayPal order</dt>
+                  <dd className="mt-0.5 break-all font-mono text-xs text-muted">
+                    {order.order_id}
+                  </dd>
+                </div>
+              </dl>
             </div>
-            <ol className="mt-3 space-y-3 text-xs leading-relaxed text-muted">
-              <li className="flex gap-2">
-                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                Your backend creates the order with{' '}
-                <code className="font-mono text-[11px]">POST /v2/checkout/orders</code>.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                The payer approves inside PayPal's own hosted experience.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                The backend captures the order and re-checks the amount, currency and status before
-                writing a record.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                Nothing the browser reports is trusted on its own.
-              </li>
-            </ol>
-          </div>
-
-          <div className="card p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-ink">
-              <Info size={14} className="text-accent-soft" aria-hidden="true" />
-              Current mode
-            </div>
-            <p className="mt-2 text-xs leading-relaxed text-muted">
-              {demoMode
-                ? 'PayPal credentials are missing, so this run uses the labelled demo engine. Results are simulated locally and are NOT Sandbox transactions.'
-                : `Connected to PayPal ${config?.paypal.mode === 'sandbox' ? 'Sandbox (api-m.sandbox.paypal.com)' : 'live'} with public client id ${config?.paypal.client_id.slice(0, 14)}…`}
-            </p>
-            {demoMode ? (
-              <Link to="/settings" className="btn btn-ghost mt-3 w-full text-xs">
-                Configure PayPal <ExternalLink size={13} aria-hidden="true" />
-              </Link>
-            ) : null}
-          </div>
-
-          <div className="card p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-ink">
-              <ThumbsUp size={14} className="text-warning" aria-hidden="true" />
-              Sandbox test cards
-            </div>
-            <ul className="mt-2 space-y-1.5 text-[11px] leading-relaxed text-muted">
-              <li>
-                Approve:{' '}
-                <code className="font-mono text-faint">4111 1111 1111 1111</code> — any future date.
-              </li>
-              <li>Decline: <code className="font-mono text-faint">4000 0000 0000 0002</code></li>
-              <li>Insufficient funds: <code className="font-mono text-faint">4000 0000 0000 9995</code></li>
-            </ul>
-          </div>
+          )}
         </aside>
       </div>
+    )}
     </>
   )
 }

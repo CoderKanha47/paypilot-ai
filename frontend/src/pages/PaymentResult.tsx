@@ -52,9 +52,9 @@ export function PaymentResult() {
   if (phase === "capturing") {
     return (
       <div className="mx-auto max-w-md text-center py-12">
-        <Loader2 size={48} className="mx-auto animate-spin text-violet-500" aria-hidden="true" />
+        <Loader2 size={48} className="mx-auto animate-spin text-accent" aria-hidden="true" />
         <h1 className="mt-4 text-lg font-semibold">Capturing payment…</h1>
-        <p className="mt-1 text-sm text-slate-500">Verifying with PayPal and recording the transaction.</p>
+        <p className="mt-1 text-sm text-muted">Verifying with PayPal and recording the transaction.</p>
       </div>
     );
   }
@@ -62,9 +62,9 @@ export function PaymentResult() {
   if (phase === "error") {
     return (
       <div className="mx-auto max-w-md text-center py-12">
-        <XOctagon size={48} className="mx-auto text-rose-500" aria-hidden="true" />
+        <XOctagon size={48} className="mx-auto text-danger" aria-hidden="true" />
         <h1 className="mt-4 text-lg font-semibold">Capture failed</h1>
-        <p className="mt-1 text-sm text-slate-500">{error}</p>
+        <p className="mt-1 text-sm text-muted">{error}</p>
         <Link to="/" className="btn btn-primary mt-5 inline-block">
           <ArrowLeft size={15} className="mr-1" /> Back to dashboard
         </Link>
@@ -75,11 +75,11 @@ export function PaymentResult() {
   if (phase === "cancelled") {
     return (
       <div className="mx-auto max-w-md text-center py-12">
-        <ArrowLeft size={48} className="mx-auto text-slate-400" aria-hidden="true" />
+        <ArrowLeft size={48} className="mx-auto text-faint" aria-hidden="true" />
         <h1 className="mt-4 text-lg font-semibold">Payment cancelled</h1>
-        <p className="mt-1 text-sm text-slate-500">You cancelled the payment in PayPal. Nothing was charged.</p>
+        <p className="mt-1 text-sm text-muted">You cancelled the payment in PayPal. Nothing was charged.</p>
         <Link to="/" className="btn btn-primary mt-5 inline-block">
-          <ArrowLeft size={15} className="mr-1" /> Back to dashboard
+          <ArrowLeft size={15} className="mr-1" /> Back to overview
         </Link>
       </div>
     );
@@ -95,13 +95,13 @@ export function PaymentResult() {
       />
 
       <div className="card p-6">
-        <div className={`flex items-start gap-3 ${isSuccess ? "border-b border-success/30" : "border-b border-rose-500/30"}`}>
-          <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${isSuccess ? "bg-success/12 text-success" : "bg-rose-500/12 text-rose-500"}`}>
+        <div className={`flex items-start gap-3 ${isSuccess ? "border-b border-success/30" : "border-b border-danger/30"}`}>
+          <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${isSuccess ? "bg-success/12 text-success" : "bg-danger/12 text-danger"}`}>
             {isSuccess ? <CheckCircle2 size={20} /> : <XOctagon size={20} />}
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-sm font-semibold">{isSuccess ? "Payment captured" : "Payment not completed"}</h2>
-            <p className="mt-1 text-xs leading-relaxed text-slate-500">
+            <p className="mt-1 text-xs leading-relaxed text-muted">
               {isSuccess
                 ? `${money(transaction?.amount ?? "", transaction?.currency ?? "USD")} was captured and recorded.`
                 : "PayPal returned a non-completed status. No money was collected."}
@@ -113,31 +113,31 @@ export function PaymentResult() {
         {transaction && (
           <dl className="mt-4 grid grid-cols-1 gap-y-3 text-sm sm:grid-cols-2">
             <div>
-              <dt className="text-[11px] uppercase tracking-[0.08em] text-slate-500">Amount</dt>
-              <dd className="mt-0.5 font-semibold tabular-nums text-slate-900">{money(transaction.amount, transaction.currency)}</dd>
+              <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">Amount</dt>
+              <dd className="mt-0.5 font-semibold tabular-nums text-ink">{money(transaction.amount, transaction.currency)}</dd>
             </div>
             <div>
-              <dt className="text-[11px] uppercase tracking-[0.08em] text-slate-500">Status</dt>
+              <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">Status</dt>
               <dd className="mt-1"><StatusBadge status={transaction.status} /></dd>
             </div>
             <div className="sm:col-span-2">
-              <dt className="text-[11px] uppercase tracking-[0.08em] text-slate-500">PayPal order</dt>
-              <dd className="mt-0.5 break-all font-mono text-xs text-slate-500">{transaction.paypal_order_id}</dd>
+              <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">PayPal order</dt>
+              <dd className="mt-0.5 break-all font-mono text-xs text-muted">{transaction.paypal_order_id}</dd>
             </div>
             {transaction.paypal_capture_id ? (
               <div className="sm:col-span-2">
-                <dt className="text-[11px] uppercase tracking-[0.08em] text-slate-500">Capture id</dt>
-                <dd className="mt-0.5 break-all font-mono text-xs text-slate-500">{transaction.paypal_capture_id}</dd>
+                <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">Capture id</dt>
+                <dd className="mt-0.5 break-all font-mono text-xs text-muted">{transaction.paypal_capture_id}</dd>
               </div>
             ) : null}
             <div className="sm:col-span-2">
-              <dt className="text-[11px] uppercase tracking-[0.08em] text-slate-500">Internal record</dt>
-              <dd className="mt-0.5 break-all font-mono text-xs text-slate-500">{transaction.id}</dd>
+              <dt className="text-[11px] uppercase tracking-[0.08em] text-faint">Internal record</dt>
+              <dd className="mt-0.5 break-all font-mono text-xs text-muted">{transaction.id}</dd>
             </div>
           </dl>
         )}
 
-        <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-200 pt-4">
+        <div className="mt-5 flex flex-wrap gap-2 border-t border-navy-700/15 pt-4">
           {transaction ? (
             <Link to={`/transactions/${transaction.id}`} className="btn btn-primary">
               View transaction

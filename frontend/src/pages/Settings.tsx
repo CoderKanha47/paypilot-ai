@@ -6,7 +6,7 @@ import { PageHeader } from "../components/PageHeader";
 import type { AppConfig, HealthResponse } from "../lib/types";
 
 function Dot({ ok }: { ok: boolean }) {
-  return ok ? <CheckCircle2 size={16} className="text-emerald-600" /> : <XCircle size={16} className="text-rose-500" />;
+  return ok ? <CheckCircle2 size={16} className="text-success" /> : <XCircle size={16} className="text-danger" />;
 }
 
 export function Settings() {
@@ -52,13 +52,13 @@ export function Settings() {
 
       <div className="card p-6">
         <h3 className="text-sm font-semibold">Readiness checks</h3>
-        <ul className="mt-4 divide-y divide-slate-100">
+        <ul className="mt-4 divide-y divide-navy-700/15">
           {checks.map((c) => (
             <li key={c.title} className="flex items-start gap-3 py-3">
               <span className="mt-0.5"><Dot ok={c.ok} /></span>
               <div>
                 <p className="text-sm font-medium">{c.title}</p>
-                <p className="text-sm text-slate-500">{c.detail}</p>
+                <p className="text-sm text-muted">{c.detail}</p>
               </div>
             </li>
           ))}
@@ -67,8 +67,8 @@ export function Settings() {
 
       <div className="card p-6">
         <h3 className="text-sm font-semibold">Environment variables</h3>
-        <p className="mt-1 text-sm text-slate-500">
-          Copy <code className="rounded bg-slate-100 px-1">.env.example</code> to <code className="rounded bg-slate-100 px-1">.env</code> and fill in
+        <p className="mt-1 text-sm text-muted">
+          Copy <code className="rounded bg-navy-700/15 px-1">.env.example</code> to <code className="rounded bg-navy-700/15 px-1">.env</code> and fill in
           the values. Keys never travel to the browser — the server reads them at startup.
         </p>
         <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
@@ -80,13 +80,13 @@ export function Settings() {
             ["OPENAI_API_KEY / ANTHROPIC_API_KEY", "Server-side only, never exposed"],
             ["SEED_DEMO_DATA", "true to load the labelled sample dataset"],
           ].map(([key, desc]) => (
-            <div key={key} className="rounded-xl border border-slate-200 p-3">
-              <p className="font-mono text-xs text-violet-700">{key}</p>
-              <p className="mt-1 text-xs text-slate-500">{desc}</p>
+            <div key={key} className="rounded-xl border border-navy-700/15 p-3">
+              <p className="font-mono text-xs text-accent-soft">{key}</p>
+              <p className="mt-1 text-xs text-faint">{desc}</p>
             </div>
           ))}
         </div>
-        <div className="mt-4 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
+        <div className="mt-4 flex items-start gap-2 rounded-xl bg-warning/10 p-3 text-sm text-warning">
           <AlertTriangle size={16} className="mt-0.5 shrink-0" />
           <p>
             PayPal <strong>sandbox only</strong>. Never paste production credentials or real card numbers — the app
