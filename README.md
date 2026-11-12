@@ -2,6 +2,8 @@
 
 **Smarter payments. Clearer decisions. Less busywork.**
 
+[Watch the demo](https://youtu.be/0xG8L8eUxPA)
+
 An AI-powered payment operations dashboard built on the PayPal Sandbox for freelancers, independent service providers, and small businesses.
 
 ## Features
